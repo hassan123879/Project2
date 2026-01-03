@@ -1,7 +1,7 @@
 package com.example.project2;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,53 +9,55 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginActivity extends AppCompatActivity {
 
     EditText etEmail, etPassword;
-    Button btnSignup, btnLogin, btnLogout;
+    Button btnSignup, btnLogin;
 
     FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
-        // Initialize Firebase
-        mAuth = FirebaseAuth.getInstance();
-
-        // Link UI components
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnSignup = findViewById(R.id.btnSignup);
         btnLogin = findViewById(R.id.btnLogin);
-        btnLogout = findViewById(R.id.btnLogout);
 
-        // Signup
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         btnSignup.setOnClickListener(v -> signupUser());
-
-        // Login
         btnLogin.setOnClickListener(v -> loginUser());
-
-        // Logout
-        btnLogout.setOnClickListener(v -> logoutUser());
     }
 
     private void signupUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Enter Email and Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+
+                        String uid = mAuth.getCurrentUser().getUid();
+
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("email", email);
+                        user.put("uid", uid);
+
+                        db.collection("users").document(uid).set(user);
+
                         Toast.makeText(this, "Signup Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, DashboardActivity.class));
+                        finish();
                     } else {
                         Toast.makeText(this, "Signup Failed", Toast.LENGTH_SHORT).show();
                     }
@@ -66,28 +68,15 @@ public class MainActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Enter Email and Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, DashboardActivity.class));
+                        finish();
                     } else {
                         Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void logoutUser() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            mAuth.signOut();
-            Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "No user logged in", Toast.LENGTH_SHORT).show();
-        }
     }
 }
