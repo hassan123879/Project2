@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="btnRed" type="id">btnred.xml</item>
+    <item name="btnGreen" type="id">btngreen.xml</item>
+    <item name="btnBlue" type="id">btnblue.xml</item>
+    <item name="frameLayout" type="id">framelayout.xml</item>
+</resources>

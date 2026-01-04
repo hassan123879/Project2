@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.project2">
     <!-- Required for Firebase -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,11 +12,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project2">
-        <!-- Required for Firebase">
+        <activity
+            android:name=".ResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InputActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FragmentHostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProductAdaptor"
+            android:exported="false"
+            tools:ignore="Instantiatable,MissingClass" />
+        <activity
+            android:name=".Product"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true" />
+
+        <!--
+         Required for Firebase">
         <activity
             android:name=".Dashboard"
             android:exported="false" />
-        <!- Dashboard Activity -->
+        <!- Dashboard Activity
+        -->
         <activity
             android:name=".DashboardActivity"
             android:exported="false" /> <!-- Login Activity (Launcher) -->
