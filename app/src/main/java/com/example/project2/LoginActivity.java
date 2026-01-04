@@ -68,15 +68,25 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, DashboardActivity.class));
+                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                         finish();
                     } else {
-                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                this,
+                                task.getException().getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
                     }
                 });
     }
+
 }
